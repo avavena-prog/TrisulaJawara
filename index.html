@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trisula Jawara - Kue Cubit & Es Selendang Mayang Betawi</title>
+ <link rel="stylesheet" href="style.css">  
+</head>
+<body> 
+    <div class="balloons">
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+</div>
+
+    <!-- Betawi Ornaments -->
+    <div class="betawi-bg">
+        <div class="ornament">🕌</div>
+        <div class="ornament">🌺</div>
+        <div class="ornament">🗼</div>
+        <div class="ornament">✿</div>
+    </div>
+
+    <!-- Cart Counter -->
+    <div class="cart-counter" id="cartCounter" onclick="toggleCart()">
+        <div>🛒</div>
+        <div class="cart-badge" id="cartBadge">0</div>
+    </div>
+
+    <header>
+        <div class="betawi-header">
+            <div class="batik-border"></div>
+            <h1>Trisula Jawara</h1>
+            <div class="batik-border"></div>
+        </div>
+        <p class="subtitle">Rasa Betawi autentik dalam setiap gigitan</p>
+         <p class="subtitle">Kue Cubit & Es Selendang Mayang</p>
+    </header>
+
+    <h1>Sejarah Kue Cubit</h1>
+    <p>Kue cubit adalah jajanan khas Betawi/Jakarta yang terinspirasi dari kuliner Belanda, poffertjes, warisan masa kolonial. Kue ini berukuran kecil, bercita rasa manis-gurih, dan dinamakan "cubit" karena cara mengambilnya yang dijepit (seperti dicubit) dengan alat khusus setelah matang.</p>
+    
+    <h1>Sejarah Es Selendang Mayang</h1>
+    <p>Es Selendang Mayang adalah kuliner legendaris Betawi yang sudah ada sejak zaman kolonial Belanda atau sekitar tahun 1940-an. Minuman ini dinamai "Selendang" karena warna lapisannya (merah, putih, hijau) menyerupai selendang, dan "Mayang" yang berarti kenyal dan manis.</p>
+
+    <div class="container">
+      <div class="products">
+
+    <!-- Kue Cubit -->
+    <div class="product-card">
+        <div class="product-image">
+           <img src="https://edusiana.org/uploads/images/2024/05/image_750x500_664d659a58069.jpg" alt="Kue Cubit">
+        </div>
+        <h3 class="product-name">Kue Cubit</h3>
+        <div class="price">Rp 15.000</div>
+        <p class="description">
+            Kue cubit khas Betawi dengan topping bervariasi.
+        </p>
+        <button class="buy-btn" onclick="addToCart(event, 'Kue Cubit Premium', 15000)">
+            🛒 Tambah ke Keranjang
+        </button>
+    </div>
+
+    <!-- Selendang Mayang -->
+    <div class="product-card">
+        <div class="product-image">
+            <img src="https://www.senibudayabetawi.com/wp-content/uploads/2023/07/2f094bae63b2723d7ae2533d1f161911.jpg" alt="Selendang Mayang">
+        </div>
+        <h3 class="product-name">Es Selendang Mayang</h3>
+        <div class="price">Rp 12.000</div>
+        <p class="description">
+            Minuman khas Betawi dengan santan dan gula merah.
+        </p>
+        <button class="buy-btn" onclick="addToCart(event, 'Es Selendang Mayang', 12000)">
+            🛒 Tambah ke Keranjang
+        </button>
+    </div>
+
+</div>
+</div>
+        </div>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2 class="contact-title">📱 Checkout via WhatsApp</h2>
+            <p style="color: #64748b; margin-bottom: 30px; font-size: 1.15rem; line-height: 1.7;">
+                Tambahkan produk ke keranjang → Klik ikon 🛒 → Checkout → 
+                <strong>WhatsApp otomatis terbuka dengan detail pesanan lengkap!</strong>
+            </p>
+            <div style="font-size: 1.75rem; color: #dc2626; font-weight: 700; margin-bottom: 10px;">
+                0895341437143
+            </div>
+            <div style="color: #22c55e; font-size: 1.1rem; font-weight: 500;">
+                Respon cepat 24/7 💚
+            </div>
+        </section>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <span class="cart-close" onclick="toggleCart()">&times;</span>
+            <h2 class="cart-title">🛒 Keranjang Belanja</h2>
+            
+            <div id="cartItemsContainer"></div>
+            
+            <div class="total-section">
+                <div class="total-amount" id="totalAmount">Rp 0</div>
+                <button class="checkout-btn" id="checkoutBtn" onclick="checkoutToWhatsApp()" disabled>
+                    🚀 Checkout & Kirim ke WhatsApp
+                </button>
+            </div>
+            
+            <div id="emptyCartMsg" class="empty-cart" style="display: none;">
+                <span style="font-size: 5rem; display: block; margin-bottom: 20px;">🛒</span>
+                Keranjang masih kosong<br>
+                <small style="font-size: 1rem;">Klik "Tambah ke Keranjang" pada produk favoritmu!</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="web.js"></script>
+</body>
+</html>
