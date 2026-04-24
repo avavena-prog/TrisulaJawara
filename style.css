@@ -671,3 +671,40 @@ body {
         font-size: 1.8rem;
     }
 }
+
+/* SECTION SEJARAH */
+h1 {
+    margin-bottom: 15px;
+}
+
+p {
+    max-width: 900px;
+    margin: 0 auto 35px auto;
+    padding: 0 20px;
+    font-size: 1rem;
+    line-height: 1.8;
+    text-align: justify;
+    color: #374151;
+}
+
+/* KHUSUS JUDUL SEJARAH */
+body > h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+/* RESPONSIVE MOBILE UNTUK SEJARAH */
+@media (max-width: 768px) {
+    body > h1 {
+        font-size: 1.5rem;
+        margin-top: 30px;
+    }
+
+    p {
+        font-size: 0.95rem;
+        padding: 0 15px;
+        line-height: 1.7;
+    }
+}
