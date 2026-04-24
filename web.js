@@ -1,115 +1,92 @@
-// === CART SYSTEM ===
 let cart = [];
 
+// Format rupiah
+function formatRupiah(number) {
+    return "Rp " + number.toLocaleString("id-ID");
+}
+
 // Tambah ke keranjang
-function addToCart(event, name, price, quantity = 1) {
-    const existingItem = cart.find(item => item.name === name);
+function addToCart(event, productName, price) {
+    const existingItem = cart.find(item => item.name === productName);
 
     if (existingItem) {
-        existingItem.quantity += quantity;
+        existingItem.qty += 1;
     } else {
-        cart.push({ name, price, quantity });
+        cart.push({
+            name: productName,
+            price: price,
+            qty: 1
+        });
     }
 
-    // Animasi sukses
-    const btn = event.target;
-    const originalText = btn.innerHTML;
+    updateCart();
 
-    btn.innerHTML = "✅ Ditambahkan!";
-    btn.classList.add("added");
+    // efek tombol berhasil
+    const button = event.target;
+    const originalText = button.innerHTML;
 
-    // efek getar kecil
-    btn.style.transform = "scale(1.2)";
+    button.classList.add("added");
+    button.innerHTML = "✓ Berhasil Ditambahkan";
+
     setTimeout(() => {
-        btn.style.transform = "scale(1)";
-    }, 200);
-
-    // Update UI
-    updateCartDisplay();
-
-    // Reset button
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.classList.remove("added");
-    }, 2000);
-
-    // Notifikasi mini
-    showNotification(`${quantity}x ${name} ditambahkan!`, "success");
+        button.classList.remove("added");
+        button.innerHTML = originalText;
+    }, 1500);
 }
 
 // Update tampilan keranjang
-function updateCartDisplay() {
-    const totalItems = cart.reduce(
-        (sum, item) => sum + item.quantity,
-        0
-    );
-
-    const totalPrice = cart.reduce(
-        (sum, item) => sum + (item.price * item.quantity),
-        0
-    );
-
-    // Update counter
-    document.getElementById("cartBadge").textContent = totalItems;
-
-    document.getElementById("cartCounter").style.background =
-        totalItems > 0
-            ? "linear-gradient(135deg, #22c55e, #16a34a)"
-            : "linear-gradient(135deg, #dc2626, #ef4444)";
-
-    // Update modal
-    const cartItemsContainer = document.getElementById("cartItemsContainer");
-    const emptyMsg = document.getElementById("emptyCartMsg");
-    const checkoutBtn = document.getElementById("checkoutBtn");
+function updateCart() {
+    const badge = document.getElementById("cartBadge");
+    const container = document.getElementById("cartItemsContainer");
     const totalAmount = document.getElementById("totalAmount");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    const emptyCartMsg = document.getElementById("emptyCartMsg");
+
+    let totalQty = 0;
+    let totalPrice = 0;
+
+    container.innerHTML = "";
 
     if (cart.length === 0) {
-        cartItemsContainer.innerHTML = "";
-        emptyMsg.style.display = "block";
+        emptyCartMsg.style.display = "block";
         checkoutBtn.disabled = true;
-        totalAmount.textContent = "Rp 0";
-        return;
+    } else {
+        emptyCartMsg.style.display = "none";
+        checkoutBtn.disabled = false;
+
+        cart.forEach(item => {
+            totalQty += item.qty;
+            totalPrice += item.price * item.qty;
+
+            const itemDiv = document.createElement("div");
+            itemDiv.classList.add("cart-item");
+
+            itemDiv.innerHTML = `
+                <div class="cart-item-details">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-qty">Jumlah: ${item.qty}</div>
+                </div>
+                <div class="cart-item-price">
+                    ${formatRupiah(item.price * item.qty)}
+                </div>
+            `;
+
+            container.appendChild(itemDiv);
+        });
     }
 
-    emptyMsg.style.display = "none";
-    checkoutBtn.disabled = false;
-
-    cartItemsContainer.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <div class="cart-item-details">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-qty">
-                    ${item.quantity}x @ Rp ${formatRupiah(item.price)}
-                </div>
-            </div>
-            <div class="cart-item-price">
-                Rp ${formatRupiah(item.price * item.quantity)}
-            </div>
-        </div>
-    `).join("");
-
-    totalAmount.textContent = `Rp ${formatRupiah(totalPrice)}`;
+    badge.textContent = totalQty;
+    totalAmount.textContent = formatRupiah(totalPrice);
 }
 
-// Format Rupiah
-function formatRupiah(angka) {
-    return angka.toString().replace(
-        /\B(?=(\d{3})+(?!\d))/g,
-        "."
-    );
-}
-
-// Toggle cart modal
+// Buka/tutup modal keranjang
 function toggleCart() {
     const modal = document.getElementById("cartModal");
 
-    modal.style.display =
-        modal.style.display === "flex"
-            ? "none"
-            : "flex";
-
     if (modal.style.display === "flex") {
-        updateCartDisplay();
+        modal.style.display = "none";
+    } else {
+        modal.style.display = "flex";
     }
 }
 
@@ -117,157 +94,33 @@ function toggleCart() {
 function checkoutToWhatsApp() {
     if (cart.length === 0) return;
 
-    const totalPrice = cart.reduce(
-        (sum, item) => sum + (item.price * item.quantity),
-        0
-    );
+    let message = "Halo, saya ingin memesan:%0A%0A";
+    let total = 0;
 
-    const itemsText = cart.map(item =>
-        `${item.quantity}x ${item.name} (Rp ${formatRupiah(item.price * item.quantity)})`
-    ).join("\n");
+    cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
 
-    const message =
-`Halo! 📱 Saya mau pesan:
-
-${itemsText}
-
-*Total: Rp ${formatRupiah(totalPrice)}*
-
-Alamat pengiriman: [isi alamat]
-Catatan: [opsional]
-
-Terima kasih! 🙏`;
-
-    // WA harus pakai kode negara, bukan 08
-    const phone = "62895341437143";
-
-    const whatsappUrl =
-        `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-    // Animasi checkout
-    const checkoutBtn = document.getElementById("checkoutBtn");
-
-    checkoutBtn.innerHTML = "🚀 Mengalihkan...";
-    checkoutBtn.disabled = true;
-
-    setTimeout(() => {
-        window.open(whatsappUrl, "_blank");
-
-        showNotification(
-            "✅ Pesanan terkirim ke WhatsApp!",
-            "success"
-        );
-
-        cart = [];
-        updateCartDisplay();
-        toggleCart();
-
-        checkoutBtn.innerHTML =
-            "🚀 Checkout & Kirim ke WhatsApp";
-        checkoutBtn.disabled = false;
-    }, 1000);
-}
-
-// Notifikasi mini
-function showNotification(message, type = "info") {
-    const notification = document.createElement("div");
-
-    notification.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 20px;
-        background: ${
-            type === "success"
-                ? "#22c55e"
-                : "#dc2626"
-        };
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        box-shadow: 0 16px 40px rgba(0,0,0,0.2);
-        z-index: 3000;
-        font-weight: 600;
-        transform: translateX(400px);
-        transition: all 0.4s ease;
-        max-width: 350px;
-    `;
-
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    // Animasi masuk
-    requestAnimationFrame(() => {
-        notification.style.transform =
-            "translateX(0)";
+        message += `• ${item.name} x${item.qty} = ${formatRupiah(subtotal)}%0A`;
     });
 
-    // Hilang otomatis
-    setTimeout(() => {
-        notification.style.transform =
-            "translateX(400px)";
+    message += `%0ATotal Pesanan: ${formatRupiah(total)}%0A`;
+    message += `%0ATerima kasih 🙏`;
 
-        setTimeout(() => {
-            notification.remove();
-        }, 400);
-    }, 3000);
+    const phoneNumber = "62895341437143";
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${message}`;
+
+    window.open(whatsappURL, "_blank");
 }
 
-// Event listeners
-document.addEventListener("click", (e) => {
-    if (
-        !e.target.closest(".cart-modal") &&
-        !e.target.closest(".cart-counter")
-    ) {
-        const modal =
-            document.getElementById("cartModal");
+// Tutup modal kalau klik luar area
+window.onclick = function(event) {
+    const modal = document.getElementById("cartModal");
 
-        if (modal.style.display === "flex") {
-            toggleCart();
-        }
+    if (event.target === modal) {
+        modal.style.display = "none";
     }
-});
+};
 
-// Escape key close modal
-document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-        const modal =
-            document.getElementById("cartModal");
-
-        if (modal.style.display === "flex") {
-            toggleCart();
-        }
-    }
-});
-
-// Smooth scroll reveal
-document.addEventListener("DOMContentLoaded", () => {
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState =
-                        "running";
-                }
-            });
-        },
-        { threshold: 0.1 }
-    );
-
-    document.querySelectorAll(".product-card")
-        .forEach(card => {
-            card.style.animationPlayState =
-                "paused";
-            observer.observe(card);
-        });
-});
-
-// Page load animation
-window.addEventListener("load", () => {
-    document.body.style.opacity = "0";
-    document.body.style.transition =
-        "opacity 0.6s ease";
-
-    setTimeout(() => {
-        document.body.style.opacity = "1";
-    }, 200);
-});
+// Saat halaman dibuka
+updateCart();
