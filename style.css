@@ -599,3 +599,75 @@ body {
             .betawi-header { flex-direction: column; gap: 16px; }
             .batik-border { width: 70px; }
         }
+/* RESPONSIVE MOBILE */
+@media (max-width: 768px) {
+
+    header {
+        padding: 50px 15px 30px;
+    }
+
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .products {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin: 40px 0 80px;
+    }
+
+    .product-card {
+        padding: 25px 20px;
+    }
+
+    .product-image {
+        width: 180px;
+        height: 180px;
+    }
+
+    .product-name {
+        font-size: 1.4rem;
+    }
+
+    .price {
+        font-size: 1.7rem;
+    }
+
+    .description {
+        font-size: 0.95rem;
+    }
+
+    .buy-btn {
+        width: 100%;
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .cart-counter {
+        width: 50px;
+        height: 50px;
+        top: 15px;
+        right: 15px;
+        font-size: 0.9rem;
+    }
+
+    .cart-content {
+        width: 95%;
+        padding: 25px 18px;
+    }
+
+    .contact-section {
+        padding: 35px 20px;
+        margin: 40px 10px 20px;
+    }
+
+    .contact-title {
+        font-size: 1.8rem;
+    }
+}
